@@ -294,8 +294,8 @@ inputTelefono.addEventListener('blur', function () {
 // ══════════════════════════════════════════════
 //  CAMPO: CORREO
 // ══════════════════════════════════════════════
-const REGEX_EMAIL   = /^[^\s@]+@(gmail\.com|hotmail\.es|hotmail\.com|outlook\.es)$/i;
-const REGEX_DOMINIO = /^(gmail\.com|hotmail\.es|hotmail\.com|outlook\.es)$/i;
+const REGEX_EMAIL   = /^[^\s@]+@yavirac\.edu\.ec$/i;
+const REGEX_DOMINIO = /^yavirac\.edu\.ec$/i;
 
 inputEmail.addEventListener('focus', () => openPop('pop-email'));
 
@@ -312,14 +312,14 @@ inputEmail.addEventListener('input', function () {
     wrapNeutral(wrapEmail, okEmail, errEmail);
     setReq('re-arroba',  false, 'Contiene el símbolo @');
     setReq('re-usuario', false, 'Tiene un usuario antes del @');
-    setReq('re-dominio', false, 'Dominio: @gmail · @hotmail · @outlook');
+    setReq('re-dominio', false, 'Dominio: @yavirac.edu.ec');
     ['rule-email-arroba','rule-email-dominio','rule-email-full'].forEach(id => setChip(id,'idle'));
     return;
   }
 
   setReq('re-arroba',  okArroba,  'Contiene el símbolo @');
   setReq('re-usuario', okUsuario, 'Tiene un usuario antes del @');
-  setReq('re-dominio', okDominio, 'Dominio: @gmail · @hotmail · @outlook');
+  setReq('re-dominio', okDominio, 'Dominio: @yavirac.edu.ec');
 
   if (okCompleto)       wrapOk(wrapEmail, okEmail, errEmail);
   else if (okArroba && !okDominio) wrapError(wrapEmail, okEmail, errEmail);
@@ -334,11 +334,11 @@ inputEmail.addEventListener('blur', function () {
     wrapError(wrapEmail, okEmail, errEmail);
     setReq('re-arroba',  false, 'Contiene el símbolo @');
     setReq('re-usuario', false, 'Tiene un usuario antes del @');
-    setReq('re-dominio', false, 'Dominio: @gmail · @hotmail · @outlook');
+    setReq('re-dominio', false, 'Dominio: @yavirac.edu.ec');
     return;
   }
   if (!REGEX_EMAIL.test(val)) {
-    showToast('Correo no aceptado', 'Usa: @gmail.com · @hotmail.com · @hotmail.es · @outlook.es', 'error');
+    showToast('Correo no aceptado', 'Usa únicamente dominio: @yavirac.edu.ec', 'error');
   }
 
 });
