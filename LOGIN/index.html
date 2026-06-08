@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yavirac - Sistema Académico</title>
+  <!-- Google Fonts (Outfit e Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- CSS Personalizado -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- CONTENEDOR PRINCIPAL DE LOGIN -->
+  <div id="login-container" class="root">
+    
+    <!-- LADO IZQUIERDO: FORMULARIO -->
+    <div class="form-section">
+      <div class="form-container">
+        
+        <!-- Logo Mobile -->
+        <div class="mobile-logo">
+          <div class="logo-icon">
+            <i data-lucide="graduation-cap"></i>
+          </div>
+          <span class="logo-title">YAVIRAC</span>
+        </div>
+
+        <div class="header">
+          <h1 class="heading">Bienvenido de vuelta</h1>
+          <p class="subheading">Ingresa a la plataforma institucional académica.</p>
+        </div>
+
+        <!-- Banner de Bloqueo (Oculto por defecto) -->
+        <div id="lockout-banner" class="lockout-banner hidden">
+          <i data-lucide="shield-alert" class="lockout-icon"></i>
+          <h2 class="lockout-title">Acceso Temporalmente Bloqueado</h2>
+          <p class="lockout-desc">Demasiados intentos fallidos. Reintenta en:</p>
+          <div id="lockout-timer" class="lockout-timer">00:00</div>
+        </div>
+
+        <!-- Alerta de Error -->
+        <div id="error-alert" class="error-alert hidden" role="alert"></div>
+
+        <!-- Formulario -->
+        <form id="login-form" class="form">
+          
+          <!-- Campo Correo -->
+          <div class="field">
+            <label for="email" class="label">Correo institucional</label>
+            <div class="input-wrapper">
+              <i data-lucide="mail" class="input-icon"></i>
+              <input
+                id="email"
+                type="email"
+                class="input"
+                placeholder="usuario@yavirac.edu.ec"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="field" style="position: relative;">
+            <label for="password" class="label">Contraseña</label>
+            <div class="input-wrapper">
+              <i data-lucide="lock" class="input-icon"></i>
+              <input
+                id="password"
+                type="password"
+                class="input"
+                placeholder="••••••••"
+                required
+                autocomplete="current-password"
+              />
+              <button type="button" id="toggle-pwd-btn" class="eye-btn" aria-label="Mostrar contraseña">
+                <i data-lucide="eye" id="eye-icon-show"></i>
+                <i data-lucide="eye-off" id="eye-icon-hide" class="hidden"></i>
+              </button>
+            </div>
+
+            <!-- Barra de fuerza (Oculta por defecto) -->
+            <div id="strength-bar-bg" class="strength-bar-bg hidden">
+              <div id="strength-bar" class="strength-bar"></div>
+            </div>
+
+            <!-- Popover absoluto de requisitos (Oculto por defecto) -->
+            <div id="requirements-popover" class="requirements-popover hidden">
+              <div class="popover-header">Requisitos de seguridad:</div>
+              
+              <span id="req-length" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Mínimo 8 caracteres
+              </span>
+              <span id="req-upper" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Una mayúscula
+              </span>
+              <span id="req-lower" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Una minúscula
+              </span>
+              <span id="req-number" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Un número
+              </span>
+              <span id="req-special" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Carácter especial (!@#$...)
+              </span>
+            </div>
+          </div>
+
+          <!-- Enlace Olvidar Contraseña -->
+          <div class="forgot-password">
+            <a href="#" id="open-forgot-modal">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <!-- CAPTCHA DE CHECKBOX PREMIUM (ESTILO CLOUDFLARE TURNSTILE / NO SOY UN ROBOT) -->
+          <div class="turnstile-container">
+            <div class="turnstile-card" id="turnstile-card">
+              <div class="turnstile-row">
+                <div class="checkbox-wrapper">
+                  <div class="turnstile-checkbox" id="turnstile-checkbox" role="checkbox" aria-checked="false" tabindex="0">
+                    <!-- Icono Check -->
+                    <i data-lucide="check" class="turnstile-check-icon hidden" id="turnstile-check"></i>
+                    <!-- Spinner de carga -->
+                    <div class="turnstile-spinner hidden" id="turnstile-spinner"></div>
+                  </div>
+                </div>
+                <div class="turnstile-label">No soy un robot</div>
+              </div>
+              <div class="turnstile-brand">
+                <i data-lucide="shield-check" class="turnstile-shield"></i>
+                <span>Seguridad Académica</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de Ingresar -->
+          <button type="submit" id="submit-btn" class="submit-btn">
+            Iniciar Sesión
+          </button>
+        </form>
+
+        <!-- Accesos rápidos de demo -->
+        <div class="demo">
+          <div class="demo-divider"><span>Demostración de Accesos</span></div>
+          <div class="demo-grid">
+            <button type="button" class="demo-chip" id="demo-student-btn">
+              👨‍🎓 Estudiante
+            </button>
+            <button type="button" class="demo-chip" id="demo-teacher-btn">
+              👩‍🏫 Docente
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LADO DERECHO: BRANDING -->
+    <div class="brand-section">
+      <div class="brand-overlay"></div>
+      <div class="brand-content">
+        <div class="brand-logo">
+          <div class="brand-logo-icon">
+            <i data-lucide="graduation-cap"></i>
+          </div>
+          <div>
+            <h2 class="brand-title">YAVIRAC</h2>
+            <p class="brand-subtitle">Educación Superior</p>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="glass-icon">
+            <i data-lucide="shield-check"></i>
+          </div>
+          <h3 class="glass-title">Sistema Académico Integral</h3>
+          <p class="glass-desc">
+            Gestiona tus matrículas, prácticas pre-profesionales, requisitos de titulación y niveles de inglés de forma segura y centralizada.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL DE INICIO DE SESIÓN EXITOSO (OVERLAY PREMIUM SIMPLIFICADO) -->
+  <div id="success-modal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width: 320px; padding: 1.75rem 1.5rem; text-align: center;">
+      <div class="success-state">
+        <i data-lucide="check-circle-2" class="modal-success-icon" style="color: #22c55e; margin-bottom: 0.75rem; width: 44px !important; height: 44px !important;"></i>
+        <h2 class="modal-title" style="margin-bottom: 0.15rem; font-size: 1.2rem;">¡Ingreso Exitoso!</h2>
+        
+        <p class="modal-success-sub" style="margin-bottom: 1.25rem; font-weight: 500; font-size: 0.8rem; color: #64748b;">
+          Sistema Académico YAVIRAC
+        </p>
+        
+        <p id="success-welcome-message" style="margin-bottom: 1.5rem; line-height: 1.45; color: #334155; font-size: 0.875rem;">
+          ¡Bienvenido de vuelta!
+        </p>
+
+        <div class="modal-actions" style="width: 100%;">
+          <button type="button" id="success-done-btn" class="done-btn">Ingresar al Portal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE RECUPERAR CONTRASEÑA -->
+  <div id="forgot-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button type="button" id="close-modal-btn" class="close-btn" aria-label="Cerrar modal">
+        <i data-lucide="x"></i>
+      </button>
+
+      <!-- PASO 1: Ingresar correo registrado -->
+      <div id="modal-initial-state">
+        <div class="modal-header">
+          <div class="icon-circle">
+            <i data-lucide="mail" class="header-icon"></i>
+          </div>
+          <h2 class="modal-title">Recuperar Contraseña</h2>
+          <p class="modal-subtitle">
+            Introduce tu dirección de correo electrónico institucional registrado para recibir un código de verificación de 6 dígitos.
+          </p>
+        </div>
+
+        <form id="forgot-form" class="modal-form">
+          <div id="recovery-error" class="error-alert hidden" style="margin-bottom: 0.75rem;"></div>
+          
+          <div class="modal-field">
+            <label for="recovery-email" class="modal-label">Correo institucional</label>
+            <div class="modal-input-wrapper">
+              <i data-lucide="mail" class="modal-input-icon"></i>
+              <input
+                id="recovery-email"
+                type="email"
+                placeholder="usuario@yavirac.edu.ec"
+                required
+                class="modal-input"
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" id="cancel-modal-btn" class="cancel-btn">Cancelar</button>
+            <button type="submit" id="send-code-btn" class="modal-submit-btn">Enviar código</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PASO 2: Ingresar código de 6 dígitos -->
+      <div id="modal-code-state" class="hidden">
+        <div class="modal-header">
+          <div class="icon-circle" style="background: rgba(244, 108, 34, 0.1); border-color: rgba(244, 108, 34, 0.2);">
+            <i data-lucide="shield-check" class="header-icon"></i>
+          </div>
+          <h2 class="modal-title">Código de Seguridad</h2>
+          <p class="modal-subtitle">
+            Hemos enviado un código de 6 dígitos a <strong id="sent-code-email" class="email-highlight">correo@test.com</strong>. Por favor, ingrésalo a continuación.
+          </p>
+        </div>
+
+        <!-- Simulador visual del código enviado -->
+        <div id="code-simulation-banner" class="lockout-banner" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af; margin-bottom: 0.75rem; padding: 0.5rem; border-radius: 8px;">
+          <span style="font-size:0.75rem; font-weight: 600;">[Simulador] Código recibido: </span>
+          <span id="simulation-code-value" style="font-family:monospace; font-weight:800; font-size:0.95rem; color:#1d4ed8; letter-spacing:1px;">000000</span>
+        </div>
+
+        <form id="code-verification-form" class="modal-form">
+          <div id="code-error" class="error-alert hidden" style="margin-bottom: 0.75rem;"></div>
+
+          <div class="modal-field">
+            <label for="recovery-code" class="modal-label">Código de verificación</label>
+            <div class="modal-input-wrapper">
+              <i data-lucide="key" class="modal-input-icon"></i>
+              <input
+                id="recovery-code"
+                type="text"
+                maxlength="6"
+                placeholder="000000"
+                required
+                class="modal-input"
+                style="text-align: center; font-family: monospace; letter-spacing: 4px; font-size: 1.1rem;"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" id="back-to-email-btn" class="cancel-btn">Atrás</button>
+            <button type="submit" id="verify-code-btn" class="modal-submit-btn">Verificar código</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PASO 3: Restablecer contraseña -->
+      <div id="modal-reset-state" class="hidden">
+        <div class="modal-header">
+          <div class="icon-circle" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2);">
+            <i data-lucide="lock" class="header-icon" style="color: #22c55e;"></i>
+          </div>
+          <h2 class="modal-title">Nueva Contraseña</h2>
+          <p class="modal-subtitle">
+            Crea una nueva contraseña segura que cumpla con los requisitos del sistema.
+          </p>
+        </div>
+
+        <form id="reset-password-form" class="modal-form">
+          <div id="reset-error" class="error-alert hidden" style="margin-bottom: 0.75rem;"></div>
+
+          <div class="modal-field" style="position: relative;">
+            <label for="recovery-new-pwd" class="modal-label">Nueva contraseña</label>
+            <div class="modal-input-wrapper">
+              <i data-lucide="lock" class="modal-input-icon"></i>
+              <input
+                id="recovery-new-pwd"
+                type="password"
+                placeholder="Nueva contraseña"
+                required
+                class="modal-input"
+                autocomplete="new-password"
+              />
+              <button type="button" id="toggle-rec-pwd-btn" class="eye-btn" aria-label="Mostrar contraseña" style="right: 0.875rem;">
+                <i data-lucide="eye" id="rec-eye-icon-show"></i>
+                <i data-lucide="eye-off" id="rec-eye-icon-hide" class="hidden"></i>
+              </button>
+            </div>
+
+            <!-- Barra de fuerza (Oculta por defecto) -->
+            <div id="rec-strength-bar-bg" class="strength-bar-bg hidden">
+              <div id="rec-strength-bar" class="strength-bar"></div>
+            </div>
+
+            <!-- Popover absoluto de requisitos (Oculto por defecto) -->
+            <div id="rec-requirements-popover" class="requirements-popover hidden">
+              <div class="popover-header">Requisitos de seguridad:</div>
+              
+              <span id="rec-req-length" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Mínimo 8 caracteres
+              </span>
+              <span id="rec-req-upper" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Una mayúscula
+              </span>
+              <span id="rec-req-lower" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Una minúscula
+              </span>
+              <span id="rec-req-number" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Un número
+              </span>
+              <span id="rec-req-special" class="req-item req-invalid">
+                <i data-lucide="check" class="req-icon req-check-icon hidden"></i>
+                <i data-lucide="x" class="req-icon req-x-icon"></i>
+                Carácter especial (!@#$...)
+              </span>
+            </div>
+          </div>
+
+          <div class="modal-field" style="position: relative;">
+            <label for="recovery-confirm-pwd" class="modal-label">Confirmar contraseña</label>
+            <div class="modal-input-wrapper">
+              <i data-lucide="shield-check" class="modal-input-icon"></i>
+              <input
+                id="recovery-confirm-pwd"
+                type="password"
+                placeholder="Confirmar contraseña"
+                required
+                class="modal-input"
+                autocomplete="new-password"
+              />
+              <button type="button" id="toggle-rec-confirm-pwd-btn" class="eye-btn" aria-label="Mostrar contraseña" style="right: 0.875rem;">
+                <i data-lucide="eye" id="rec-confirm-eye-icon-show"></i>
+                <i data-lucide="eye-off" id="rec-confirm-eye-icon-hide" class="hidden"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="save-new-pwd-btn" class="modal-submit-btn" style="width: 100%; margin-top: 0.5rem; height: 38px;">
+            Restablecer contraseña
+          </button>
+        </form>
+      </div>
+
+      <!-- PASO 4: Éxito final -->
+      <div id="modal-success-state" class="hidden">
+        <div class="success-state">
+          <i data-lucide="check-circle-2" class="modal-success-icon"></i>
+          <h2 class="modal-title">Contraseña Restablecida</h2>
+          <p class="modal-success-text">
+            ¡Tu contraseña ha sido restablecida con éxito!
+          </p>
+          <p class="modal-success-sub">
+            Ya puedes iniciar sesión en la plataforma utilizando tu nueva clave de seguridad.
+          </p>
+          <button type="button" id="done-modal-btn" class="done-btn">Iniciar Sesión</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE CAPTCHA DE IMÁGENES (ESTILO RECAPTCHA FLOTANTE) -->
+  <div id="captcha-modal" class="modal-overlay hidden">
+    <div class="modal-card captcha-modal-card">
+      <button type="button" id="close-captcha-modal" class="close-btn" aria-label="Cerrar verificación">
+        <i data-lucide="x"></i>
+      </button>
+
+      <div class="captcha-header">
+        <span class="captcha-title">Verificación de seguridad</span>
+        <span class="captcha-instruction">Selecciona exactamente las <strong>3</strong> imágenes de:</span>
+        <div class="captcha-target-box">
+          <span id="captcha-target-label" class="captcha-target-name">Gato</span>
+        </div>
+      </div>
+      
+      <div class="captcha-grid" id="captcha-grid">
+        <!-- 9 imágenes generadas dinámicamente -->
+      </div>
+      
+      <div class="captcha-footer">
+        <button type="button" id="refresh-grid-captcha" class="captcha-footer-btn" title="Recargar imágenes" aria-label="Recargar imágenes">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+        <div class="captcha-status">
+          <span id="grid-captcha-error" class="captcha-error-text hidden">Selección incorrecta. Reintenta.</span>
+          <span id="grid-captcha-success" class="captcha-success-text hidden">✓ Verificado</span>
+        </div>
+        <button type="button" id="verify-grid-captcha" class="verify-grid-btn" disabled>
+          Verificar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LÓGICO -->
+  <script src="script.js"></script>
+</body>
+</html>

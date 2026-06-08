@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro - Yavirac</title>
+  <meta name="description" content="Portal de Admisión del Instituto Superior Tecnológico Yavirac." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="formulario.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<!-- TOAST STACK -->
+<div id="toast-stack" class="toast-stack"></div>
+
+<!-- PANTALLA DE ÉXITO -->
+<div id="success-screen" class="success-root hidden">
+  <div class="success-card">
+    <div class="success-header">
+      <svg class="success-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <h2 class="success-title">¡Registro Exitoso!</h2>
+      <p class="success-subtitle">Bienvenido al Portal Estudiantil Yavirac</p>
+    </div>
+    <div class="user-info-box">
+      <div class="user-avatar" id="success-avatar">A</div>
+      <div class="user-details">
+        <p class="user-name"  id="success-nombre"></p>
+        <p class="user-email" id="success-email"></p>
+        <span class="user-role-badge">Estudiante Nuevo</span>
+      </div>
+    </div>
+    <p class="success-message">
+      Tu cuenta ha sido creada correctamente. Recibirás una confirmación en <strong id="success-email-2"></strong>.
+    </p>
+    <button class="btn-volver" id="btn-volver">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/>
+      </svg>
+      Volver al Inicio
+    </button>
+  </div>
+</div>
+
+<!-- MODAL DE CAPTCHA DE IMÁGENES (ESTILO RECAPTCHA FLOTANTE) -->
+<div id="captcha-modal" class="modal-overlay hidden">
+  <div class="modal-card captcha-modal-card">
+    <button type="button" id="close-captcha-modal" class="close-btn" aria-label="Cerrar verificación">
+      <i data-lucide="x"></i>
+    </button>
+    <div class="captcha-header">
+      <span class="captcha-title">Verificación de seguridad</span>
+      <span class="captcha-instruction">Selecciona exactamente las <strong>3</strong> imágenes de:</span>
+      <div class="captcha-target-box">
+        <span id="captcha-target-label" class="captcha-target-name">Gato</span>
+      </div>
+    </div>
+    
+    <div class="captcha-grid" id="captcha-grid">
+      <!-- 9 imágenes generadas dinámicamente -->
+    </div>
+    
+    <div class="captcha-footer">
+      <button type="button" id="refresh-grid-captcha" class="captcha-footer-btn" title="Recargar imágenes" aria-label="Recargar imágenes">
+        <i data-lucide="refresh-cw"></i>
+      </button>
+      <div class="captcha-status">
+        <span id="grid-captcha-error" class="captcha-error-text hidden">Selección incorrecta. Reintenta.</span>
+        <span id="grid-captcha-success" class="captcha-success-text hidden">✓ Verificado</span>
+      </div>
+      <button type="button" id="verify-grid-captcha" class="verify-grid-btn" disabled>
+        Verificar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VOLVER AL LOGIN -->
+<div id="login-redirect-modal" class="captcha-modal-overlay hidden" style="z-index: 20000;">
+  <div class="captcha-modal-card" style="max-width: 320px; padding: 2rem; text-align: center;">
+    <div class="captcha-spinner" style="margin: 0 auto 1rem auto; width: 32px; height: 32px; border-width: 3px;"></div>
+    <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; color: #182f59; margin-bottom: 0.5rem;">Volviendo al Login</h3>
+    <p style="font-size: 0.85rem; color: #64748b;">Cargando pantalla de inicio de sesión...</p>
+  </div>
+</div>
+
+<!-- LAYOUT PRINCIPAL -->
+<div class="root" id="main-layout">
+
+  <!-- IZQUIERDA -->
+  <section class="form-section">
+    <div class="form-container">
+
+      <div class="mobile-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/>
+          </svg>
+        </div>
+        <span class="logo-title">YAVIRAC</span>
+      </div>
+
+      <div class="header">
+        <img id="header-logo"
+          src="https://yavirac.edu.ec/v2/wp-content/uploads/2024/04/LOGO-YAVIRAC-2024.png"
+          alt="Instituto Yavirac" class="header-logo"
+          onerror="this.style.display='none'" />
+        <h1 class="heading">Crear cuenta</h1>
+        <p class="subheading">Completa tus datos para acceder al portal académico.</p>
+      </div>
+
+      <form id="registro-form" class="form" novalidate>
+
+        <!-- ══ CÉDULA ══ -->
+        <div class="field" style="position:relative;">
+          <label for="cedula" class="label">Cédula de Identidad</label>
+          <div class="input-wrapper" id="wrap-cedula">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/>
+            </svg>
+            <input id="cedula" type="text" class="input" placeholder="1712345678"
+              inputmode="numeric" maxlength="10" autocomplete="off" />
+            <svg class="status-icon status-ok hidden" id="ok-cedula" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <svg class="status-icon status-err hidden" id="err-cedula" viewBox="0 0 24 24" fill="none" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+          </div>
+          <!-- Popover cédula -->
+          <div class="req-popover hidden" id="pop-cedula">
+            <div class="popover-header">Requisitos de la cédula</div>
+            <span class="req-item req-invalid" id="rc-nums">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Solo dígitos numéricos (0-9)
+            </span>
+            <span class="req-item req-invalid" id="rc-len">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Exactamente 10 dígitos
+            </span>
+            <span class="req-item req-invalid" id="rc-valid">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Cédula ecuatoriana válida
+            </span>
+          </div>
+
+        </div>
+
+        <!-- ══ NOMBRE ══ -->
+        <div class="field" style="position:relative;">
+          <label for="nombre" class="label">Nombres Completos</label>
+          <div class="input-wrapper" id="wrap-nombre">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+            </svg>
+            <input id="nombre" type="text" class="input" placeholder="Ana Isabel García López" autocomplete="name" />
+            <svg class="status-icon status-ok hidden" id="ok-nombre" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <svg class="status-icon status-err hidden" id="err-nombre" viewBox="0 0 24 24" fill="none" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+          </div>
+          <!-- Popover nombre -->
+          <div class="req-popover hidden" id="pop-nombre">
+            <div class="popover-header">Requisitos del nombre</div>
+            <span class="req-item req-invalid" id="rn-letras">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Solo letras y espacios
+            </span>
+            <span class="req-item req-invalid" id="rn-nonums">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Sin números ni símbolos
+            </span>
+            <span class="req-item req-invalid" id="rn-len">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Mínimo 3 caracteres
+            </span>
+          </div>
+        </div>
+
+        <!-- ══ TELÉFONO ══ -->
+        <div class="field" style="position:relative;">
+          <label for="telefono" class="label">Teléfono Móvil</label>
+          <div class="input-wrapper" id="wrap-telefono">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/>
+            </svg>
+            <input id="telefono" type="text" class="input" placeholder="0991234567"
+              inputmode="numeric" maxlength="10" autocomplete="tel" />
+            <svg class="status-icon status-ok hidden" id="ok-telefono" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <svg class="status-icon status-err hidden" id="err-telefono" viewBox="0 0 24 24" fill="none" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+          </div>
+          <!-- Popover teléfono -->
+          <div class="req-popover hidden" id="pop-telefono">
+            <div class="popover-header">Requisitos del teléfono</div>
+            <span class="req-item req-invalid" id="rt-nums">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Solo dígitos numéricos (0-9)
+            </span>
+            <span class="req-item req-invalid" id="rt-noletras">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Sin letras ni símbolos
+            </span>
+            <span class="req-item req-invalid" id="rt-len">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Exactamente 10 dígitos
+            </span>
+          </div>
+
+        </div>
+
+        <!-- ══ CORREO ══ -->
+        <div class="field" style="position:relative;">
+          <label for="email" class="label">Correo Electrónico</label>
+          <div class="input-wrapper" id="wrap-email">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+            </svg>
+            <input id="email" type="email" class="input" placeholder="estudiante@gmail.com" autocomplete="email" />
+            <svg class="status-icon status-ok hidden" id="ok-email" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <svg class="status-icon status-err hidden" id="err-email" viewBox="0 0 24 24" fill="none" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+          </div>
+          <!-- Popover email -->
+          <div class="req-popover hidden" id="pop-email">
+            <div class="popover-header">Requisitos del correo</div>
+            <span class="req-item req-invalid" id="re-arroba">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Contiene el símbolo @
+            </span>
+            <span class="req-item req-invalid" id="re-usuario">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Tiene un usuario antes del @
+            </span>
+            <span class="req-item req-invalid" id="re-dominio">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Dominio: @gmail · @hotmail · @outlook
+            </span>
+          </div>
+
+        </div>
+
+        <!-- ══ CONTRASEÑA ══ -->
+        <div class="field" style="position:relative;">
+          <label for="password" class="label">Contraseña</label>
+          <div class="input-wrapper" id="wrap-password">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+            </svg>
+            <input id="password" type="password" class="input" placeholder="••••••••"
+              style="padding-right:2.5rem;" autocomplete="new-password" />
+            <button type="button" class="eye-btn" id="toggle-pwd" aria-label="Ver contraseña">
+              <svg id="eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:15px;height:15px">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              <svg id="eye-hide" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:15px;height:15px">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Barra fuerza -->
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-top:4px;">
+            <div class="strength-bar-bg hidden" id="strength-bg" style="flex:1;">
+              <div class="strength-bar" id="strength-bar"></div>
+            </div>
+            <span class="strength-label hidden" id="strength-label"></span>
+          </div>
+
+          <!-- Popover contraseña -->
+          <div class="req-popover hidden" id="pop-password">
+            <div class="popover-header">Requisitos de seguridad</div>
+            <span class="req-item req-invalid" id="rp-len">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Entre 6 y 12 caracteres
+            </span>
+            <span class="req-item req-invalid" id="rp-upper">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Una mayúscula (A-Z)
+            </span>
+            <span class="req-item req-invalid" id="rp-lower">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Una minúscula (a-z)
+            </span>
+            <span class="req-item req-invalid" id="rp-num">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Un número (0-9)
+            </span>
+            <span class="req-item req-invalid" id="rp-special">
+              <svg class="req-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Un símbolo (@$!%*?&amp;.)
+            </span>
+          </div>
+
+        </div>
+
+
+
+        <!-- CAPTCHA DE CHECKBOX PREMIUM (ESTILO CLOUDFLARE TURNSTILE / NO SOY UN ROBOT) -->
+        <div class="turnstile-container">
+          <div class="turnstile-card" id="turnstile-card">
+            <div class="turnstile-row">
+              <div class="checkbox-wrapper">
+                <div class="turnstile-checkbox" id="turnstile-checkbox" role="checkbox" aria-checked="false" tabindex="0">
+                  <!-- Icono Check -->
+                  <i data-lucide="check" class="turnstile-check-icon hidden" id="turnstile-check"></i>
+                  <!-- Spinner de carga -->
+                  <div class="turnstile-spinner hidden" id="turnstile-spinner"></div>
+                </div>
+              </div>
+              <div class="turnstile-label">No soy un robot</div>
+            </div>
+            <div class="turnstile-brand">
+              <i data-lucide="shield-check" class="turnstile-shield"></i>
+              <span>Seguridad Académica</span>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Completar Registro
+        </button>
+
+        <p style="text-align:center; margin-top:1.25rem; font-size:0.85rem; color:#64748b;">
+          ¿Ya tienes cuenta? <a href="#" id="go-login" style="color:#f46c22; font-weight:700; text-decoration:none;">Iniciar sesión</a>
+        </p>
+      </form>
+
+      <p class="footer-note">Instituto Superior Tecnológico Yavirac &copy; 2025</p>
+    </div>
+  </section>
+
+  <!-- DERECHA: BRANDING -->
+  <section class="brand-section">
+    <div class="brand-overlay"></div>
+    <div class="brand-content">
+      <div class="brand-logo">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="width:26px;height:26px">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/>
+          </svg>
+        </div>
+        <div>
+          <p class="brand-title">YAVIRAC</p>
+          <p class="brand-subtitle">Instituto Superior Tecnológico</p>
+        </div>
+      </div>
+      <div class="glass-card">
+        <div class="glass-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:20px;height:20px">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+          </svg>
+        </div>
+        <h2 class="glass-title">Portal de Admisión 2025</h2>
+        <p class="glass-desc">Regístrate para acceder a matrículas, horarios, notas y todos los servicios del Instituto Yavirac.</p>
+      </div>
+      <ul class="brand-list">
+        <li><div class="brand-list-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#f46c22" stroke-width="2.5" style="width:12px;height:12px"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg></div>Acceso a matrículas en línea</li>
+        <li><div class="brand-list-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#f46c22" stroke-width="2.5" style="width:12px;height:12px"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg></div>Consulta de notas y asistencias</li>
+        <li><div class="brand-list-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#f46c22" stroke-width="2.5" style="width:12px;height:12px"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg></div>Comunicación directa con docentes</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+<script src="formulario.js"></script>
+</body>
+</html>
