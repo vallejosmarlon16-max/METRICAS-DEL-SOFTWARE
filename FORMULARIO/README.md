@@ -1,14 +1,13 @@
-# Formulario de Registro Yavirac con Captcha Premium
+# Formulario de Registro Yavirac 
 
 Este proyecto contiene el diseño completo, estilos y lógica para un **Formulario de Registro Estudiantil** premium, destacando métricas de alta calidad, validaciones en tiempo real y un sistema antibots avanzado.
 
 ---
 
-## 📈 Métricas de Calidad (Quality Metrics)
-
+## Métricas de Calidad 
 El proyecto ha sido desarrollado bajo estrictos estándares de calidad orientados a la experiencia de usuario (UX) y la robustez del código:
 
-1. **Responsividad Extrema (Mobile-First y Adaptable):**
+1. **Responsividad (Mobile-First y Adaptable):**
    - Garantía de adaptación a dispositivos ultra-pequeños (360px de ancho) hasta monitores Ultra-Wide.
    - Uso inteligente de `overflow-y` y `max-height` para prevenir el corte de información. Todo contenido superior al viewport permite scroll dinámico natural.
 2. **Cero Dependencias Pesadas (Zero-Bloat):**
@@ -20,12 +19,11 @@ El proyecto ha sido desarrollado bajo estrictos estándares de calidad orientado
    - Popovers flotantes que explican claramente el error exacto (ej: falta una mayúscula en la contraseña) en lugar de mensajes de error genéricos.
 4. **Código Limpio (Clean Code):**
    - Separación estricta de responsabilidades: HTML (Estructura), CSS (Presentación y Animaciones), y JS (Eventos y Lógica de validación).
-   - Variables globales obsoletas eliminadas.
    - Diseño modular preparado para escalar.
 
 ---
 
-## ⚙️ Cómo Funciona Todo (Arquitectura y Flujo)
+## Cómo Funciona Todo (Arquitectura y Flujo)
 
 ### 1. Motor de Validaciones (Vanilla JS)
 Cada campo (`<input>`) posee escuchadores de eventos (`input`, `focus`, `blur`, `keypress`) que disparan funciones específicas:
