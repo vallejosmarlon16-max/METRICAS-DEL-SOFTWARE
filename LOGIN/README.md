@@ -4,7 +4,7 @@ Este proyecto es un sistema de inicio de sesión académico seguro y premium dis
 
 ---
 
-## 🚀 Características Principales
+## Características Principales
 
 ### 1. Interfaz de Usuario Premium y Ultra-Compacta
 * **Diseño Split-Screen:** Una sección izquierda para formularios interactivos y una derecha para la identidad visual de la institución.
@@ -46,7 +46,7 @@ Este proyecto es un sistema de inicio de sesión académico seguro y premium dis
 
 ---
 
-## 🔑 Guía de Prueba: Flujo de Recuperar Contraseña
+## Guía de Prueba: Flujo de Recuperar Contraseña
 
 Para validar paso a paso el funcionamiento de la recuperación de contraseña:
 
@@ -62,23 +62,7 @@ Para validar paso a paso el funcionamiento de la recuperación de contraseña:
 6. **Autocompletado Dinámico (Prueba):** Haz clic en el botón de demostración (**Estudiante** o **Docente**) correspondiente al correo que recuperaste. Notarás que el formulario ahora se completa de manera automática utilizando tu **nueva contraseña** guardada en `localStorage`.
 7. **Verificar Ingreso:** Resuelve el Captcha de imágenes y presiona **"Iniciar Sesión"** para verificar el ingreso exitoso.
 
----
-
-## 🛠️ Instalación y Uso
-
-Debido a que el proyecto está estructurado con tecnologías nativas (Vanilla HTML, CSS y JS), no requiere dependencias ni compiladores:
-
-1. **Clonar o Descargar el Repositorio:**
-   ```bash
-   git clone https://github.com/vallejosmarlon16-max/LOGIN-DEBER.git
-   ```
-2. **Abrir el Proyecto:**
-   - Simplemente haz doble clic sobre el archivo [index.html](file:///D:/LOGIN/index.html) para ejecutarlo en cualquier navegador web.
-   - O bien, utiliza una extensión como *Live Server* en tu editor de código preferido para una experiencia de desarrollo local fluida.
-
----
-
-## 📐 Métricas de Calidad del Software
+## Métricas de Calidad del Software
 * **Usabilidad:** Diseño intuitivo con popovers flotantes absolutos que previenen la sobrecarga de información y evitan la necesidad de scroll vertical.
 * **Seguridad:** Protección contra fuerza bruta con persistencia en cliente (`localStorage`) y validación de seguridad robusta de contraseñas.
 * **Eficiencia:** Carga inmediata al pesar menos de 70 KB en total y cargar dependencias ligeras como Lucide Icons desde CDN de forma asíncrona.
